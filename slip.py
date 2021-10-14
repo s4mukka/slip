@@ -72,12 +72,18 @@ class Enlace:
             return
 
         dados = b''.join(self.buffer) + dados
-        frames = dados.split(b'\xc0')
+        datagramas = dados.split(b'\xc0')
         self.buffer = []
 
-        for frame in frames:
-            if frame != b'':
-                frame = frame.replace(b'\xdb\xdc', b'\xc0').replace(
+        for datagrama in datagramas:
+            if datagrama != b'':
+                datagrama = datagrama.replace(b'\xdb\xdc', b'\xc0').replace(
                     b'\xdb\xdd', b'\xdb')
-                self.callback(frame)
+
+                try:
+                    self.callback(datagrama)
+                except:
+                    pass
+                finally:
+                    self.buffer = []
         pass
